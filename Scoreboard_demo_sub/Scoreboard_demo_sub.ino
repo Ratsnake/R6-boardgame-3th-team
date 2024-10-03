@@ -1,59 +1,86 @@
+#include <SoftwareSerial.h>
 #include <MsTimer2.h>
 
-const int a = 2;
-const int b = 3;
-const int c = 4;
-const int d = 5;
-const int e = 6;
-const int f = 7;
-const int g = 8;
+SoftwareSerial mySerial(12, 13);//rx,tx
 
-unsigned short point = 0;
-
-void time_count(){
-  point++;
-}
+int point = 0;
 
 void setup() {
   // put your setup code here, to run once:
-  int i;
-  for(i = 0; i <= 13; i++){
-    pinMode(i, OUTPUT);
-  }
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
+  pinMode(7, OUTPUT);
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
   
-  MsTimer2::set(100, time_count);
-  MsTimer2::start();
+  mySerial.begin(9600);
+  while(!mySerial);
+
+  Serial.begin(9600);
+  while(!Serial)
+
+  Serial.println("Setup Complete");
 }
+
+short rank;
 
 void loop() {
   // put your main code here, to run repeatedly:
-
-  
-
   while(1){
-
-    dynamic(9, point-point/10*10);
-
-    if (point/10-point/100*10 != 0 || point/100 != 0){
-
-      dynamic(10, point/10-point/100*10);
-      
-    }
-    if (point/100){
-
-      dynamic(11, point/100);
-
-    }
-
-    if (point == 999){
-      point = 0;
-    }
     
+    if(mySerial.available() > 0){
+      String data = mySerial.readStringUntil('\n');
+
+      if(data.startsWith("point:")){
+        point = data.substring(6).toInt();
+        rank = 0;
+      }else if(data.startsWith("rank:")){
+        point = data.substring(5).toInt();
+        rank = 1;
+      }
+    }
+
+    if (rank != 1){
+      display(point);
+    }else{
+      dynamic(11, 10);
+      display(point);
+    }
+
+    
+  }
+
+}
+
+void display(int num){
+  dynamic(9, num-num/10*10);
+
+  if (num >= 1000 || num/10-num/100*10 != 0 || num/100 != 0){
+
+    dynamic(10, num/10-num/100*10 );
+      
+  }
+  if (num/100){
+
+    dynamic(11, num/100);
 
   }
 }
 
 void dynamic(int index, int num){
+
+  const int a = 2;
+  const int b = 3;
+  const int c = 4;
+  const int d = 5;
+  const int e = 6;
+  const int f = 7;
+  const int g = 8;
 
   digitalWrite(index, HIGH);
 
@@ -148,6 +175,14 @@ void dynamic(int index, int num){
     digitalWrite(f, LOW);
     digitalWrite(g, LOW);
     break;
+    case 10:
+    digitalWrite(a, HIGH);
+    digitalWrite(b, HIGH);
+    digitalWrite(c, HIGH);
+    digitalWrite(d, LOW);
+    digitalWrite(e, LOW);
+    digitalWrite(f, LOW);
+    digitalWrite(g, HIGH);
   }
 
   digitalWrite(index, LOW);

@@ -3,15 +3,7 @@
 
 SoftwareSerial mySerial(12, 13);//rx,tx
 
-const int a = 2;
-const int b = 3;
-const int c = 4;
-const int d = 5;
-const int e = 6;
-const int f = 7;
-const int g = 8;
-
-unsigned int point = 0;
+int point = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -23,8 +15,8 @@ void setup() {
   pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
-  pinMode(12, OUTPUT);
-  pinMode(13, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
   
   mySerial.begin(9600);
   while(!mySerial);
@@ -39,12 +31,33 @@ void loop() {
   // put your main code here, to run repeatedly:
   while(1){
     
-    String data = mySerial.readStringUntil('\n');
+    if(mySerial.available() > 0){
+      String data = mySerial.readStringUntil('\n');
 
-    if (data.startsWith("SET")){
-      point = 0;
-    }else if(data.startsWith("PLUS")){
-      point += 1;
+      if(data.startsWith("reset")){
+        point = 0;
+
+        Serial.print("RESET point = ");
+        Serial.println(point);
+
+      }
+      else if(data.startsWith("COMMON")){
+
+        point += 1;
+
+      }
+      else if(data.startsWith("RARE")){
+
+        point += 3;
+
+      }
+      else if(data.startsWith("EPIC")){
+
+        point += 5;
+
+      }
+      Serial.println(data);
+      
     }
 
     display(point);
@@ -52,7 +65,7 @@ void loop() {
 
 }
 
-void display(unsigned short num){
+void display(int num){
   dynamic(9, num-num/10*10);
 
   if (num/10-num/100*10 != 0 || num/100 != 0){
@@ -60,7 +73,7 @@ void display(unsigned short num){
     dynamic(10, num/10-num/100*10);
       
   }
-  else if (num/100){
+  if (num/100){
 
     dynamic(11, num/100);
 
@@ -68,6 +81,14 @@ void display(unsigned short num){
 }
 
 void dynamic(int index, int num){
+
+  const int a = 2;
+  const int b = 3;
+  const int c = 4;
+  const int d = 5;
+  const int e = 6;
+  const int f = 7;
+  const int g = 8;
 
   digitalWrite(index, HIGH);
 

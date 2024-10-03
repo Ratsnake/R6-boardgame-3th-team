@@ -16,8 +16,8 @@ void setup() {
   pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
-  pinMode(12, OUTPUT);
-  pinMode(13, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
 }
 
 void loop() {
@@ -27,7 +27,7 @@ void loop() {
 
 }
 
-void display(unsigned short num){
+void display(unsigned int num){
   dynamic(9, num-num/10*10);
 
   if (num/10-num/100*10 != 0 || num/100 != 0){
@@ -35,7 +35,7 @@ void display(unsigned short num){
     dynamic(10, num/10-num/100*10);
       
   }
-  else if (num/100){
+  if (num/100){
 
     dynamic(11, num/100);
 
