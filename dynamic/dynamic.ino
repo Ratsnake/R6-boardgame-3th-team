@@ -1,8 +1,3 @@
-#include <SoftwareSerial.h>
-#include <MsTimer2.h>
-
-SoftwareSerial mySerial(12, 13);//rx,tx
-
 const int a = 2;
 const int b = 3;
 const int c = 4;
@@ -10,8 +5,6 @@ const int d = 5;
 const int e = 6;
 const int f = 7;
 const int g = 8;
-
-unsigned int point = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -25,30 +18,12 @@ void setup() {
   pinMode(9, OUTPUT);
   pinMode(12, OUTPUT);
   pinMode(13, OUTPUT);
-  
-  mySerial.begin(9600);
-  while(!mySerial);
-
-  Serial.begin(9600);
-  while(!Serial)
-
-  Serial.println("Setup Complete");
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  while(1){
-    
-    String data = mySerial.readStringUntil('\n');
-
-    if (data.startsWith("SET")){
-      point = 0;
-    }else if(data.startsWith("PLUS")){
-      point += 1;
-    }
-
-    display(point);
-  }
+  
+  display(159);
 
 }
 
