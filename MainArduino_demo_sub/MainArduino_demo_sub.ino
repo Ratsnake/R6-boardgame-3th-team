@@ -54,4 +54,5 @@ void loop() {
     mySerial.print("rank:");
     mySerial.println(4);
     delay(2000);
+  }
 }
