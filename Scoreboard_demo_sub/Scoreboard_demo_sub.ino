@@ -35,7 +35,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   while(1){
     
-    if(mySerial.available() > 0){
+    if(mySerial.available()){
       String data = mySerial.readStringUntil('\n');
 
       if(data.startsWith("point:")){
