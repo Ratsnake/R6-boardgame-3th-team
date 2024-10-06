@@ -21,10 +21,12 @@ void setup() {
   mySerial.begin(9600);
   while(!mySerial);
 
+  /**
   Serial.begin(9600);
   while(!Serial)
 
   Serial.println("Setup Complete");
+  **/
 }
 
 short rank;
