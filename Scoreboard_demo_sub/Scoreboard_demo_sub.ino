@@ -3,7 +3,7 @@
 
 SoftwareSerial mySerial(12, 13);//rx,tx
 
-int point = 0;
+int num_data = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -37,19 +37,19 @@ void loop() {
       String data = mySerial.readStringUntil('\n');
 
       if(data.startsWith("point:")){
-        point = data.substring(6).toInt();
+        num_data = data.substring(6).toInt();
         rank = 0;
       }else if(data.startsWith("rank:")){
-        point = data.substring(5).toInt();
+        num_data = data.substring(5).toInt();
         rank = 1;
       }
     }
 
     if (rank != 1){
-      display(point);
+      display(num_data);
     }else{
       dynamic(11, 10);
-      display(point);
+      display(num_data);
     }
 
     
