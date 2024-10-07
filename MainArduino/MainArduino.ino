@@ -3,6 +3,7 @@
 #include <SoftwareSerial.h>
 #include <MsTimer2.h>
 
+
 SoftwareSerial mySerial(12, 13);//rx.tx
 
 BH1745NUC bh1745nuc_39(BH1745NUC_DEVICE_ADDRESS_39);

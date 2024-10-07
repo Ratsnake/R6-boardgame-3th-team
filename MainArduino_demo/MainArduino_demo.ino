@@ -2,16 +2,33 @@
 #include <BH1745NUC.h>
 #include <SoftwareSerial.h>
 #include <MsTimer2.h>
+#include <Servo.h>
 
 SoftwareSerial mySerial(12, 13);//rx.tx
 
 BH1745NUC bh1745nuc_39(BH1745NUC_DEVICE_ADDRESS_39);
 BH1745NUC bh1745nuc_38(BH1745NUC_DEVICE_ADDRESS_38);
 
+Servo sv1;
+Servo sv2;
+
 const int button_1 = 2;
 const int button_2 = 3;
 
 const int out_1 = 13;
+
+const int sv1_pin = 6;
+const int sv2_pin = 7;
+
+void sv1_speed(int pct){
+  int angle = 90-0.9*pct;
+  sv1.write(angle);
+}
+
+void sv2_speed(int pct){
+  int angle = 90-0.9*pct;
+  sv2.write(angle);
+}
 
 unsigned short point = 356;
 
@@ -31,7 +48,8 @@ void setup() {
   rc = bh1745nuc_39.init();
   rc_2 = bh1745nuc_38.init();
 
-  mySerial.println("reset");
+  sv1.attach(sv1_pin,700,2300);
+  sv2.attach(sv2_pin,700,2300);
 
   delay(500);
 
