@@ -13,7 +13,7 @@ const int button_2 = 3;
 
 const int out_1 = 13;
 
-unsigned short point = 15;
+unsigned short point = 356;
 
 void setup() {
 
@@ -46,21 +46,13 @@ void loop() {
   int rand;
   
   while(1){
-
-    rand = random(1,3 + 1);
-
-    if (rand == 1){
-      mySerial.println("COMMON");
-    }else if(rand == 2){
-      mySerial.println("RARE");
-    }else{
-      mySerial.println("EPIC");
-    }
-
+    mySerial.print("point:");
+    mySerial.println(point);
     
+    delay(2000);
 
+    mySerial.print("rank:");
+    mySerial.println(4);
     delay(2000);
   }
-
-  mySerial.println("SET");
 }

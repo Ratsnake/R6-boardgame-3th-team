@@ -3,7 +3,7 @@
 
 SoftwareSerial mySerial(12, 13);//rx,tx
 
-int point = 0;
+int num_data = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -21,46 +21,40 @@ void setup() {
   mySerial.begin(9600);
   while(!mySerial);
 
+  /**
   Serial.begin(9600);
   while(!Serial)
 
   Serial.println("Setup Complete");
+  **/
 }
+
+short rank;
 
 void loop() {
   // put your main code here, to run repeatedly:
   while(1){
     
-    if(mySerial.available() > 0){
+    if(mySerial.available()){
       String data = mySerial.readStringUntil('\n');
 
-      if(data.startsWith("reset")){
-        point = 0;
-
-        Serial.print("RESET point = ");
-        Serial.println(point);
-
+      if(data.startsWith("point:")){
+        num_data = data.substring(6).toInt();
+        rank = 0;
+      }else if(data.startsWith("rank:")){
+        num_data = data.substring(5).toInt();
+        rank = 1;
       }
-      else if(data.startsWith("COMMON")){
-
-        point += 1;
-
-      }
-      else if(data.startsWith("RARE")){
-
-        point += 3;
-
-      }
-      else if(data.startsWith("EPIC")){
-
-        point += 5;
-
-      }
-      Serial.println(data);
-      
     }
 
-    display(point);
+    if (rank != 1){
+      display(num_data);
+    }else{
+      dynamic(11, 10);
+      display(num_data);
+    }
+
+    
   }
 
 }
@@ -68,9 +62,9 @@ void loop() {
 void display(int num){
   dynamic(9, num-num/10*10);
 
-  if (num/10-num/100*10 != 0 || num/100 != 0){
+  if (num >= 1000 || num/10-num/100*10 != 0 || num/100 != 0){
 
-    dynamic(10, num/10-num/100*10);
+    dynamic(10, num/10-num/100*10 );
       
   }
   if (num/100){
@@ -183,6 +177,14 @@ void dynamic(int index, int num){
     digitalWrite(f, LOW);
     digitalWrite(g, LOW);
     break;
+    case 10:
+    digitalWrite(a, HIGH);
+    digitalWrite(b, HIGH);
+    digitalWrite(c, HIGH);
+    digitalWrite(d, LOW);
+    digitalWrite(e, LOW);
+    digitalWrite(f, LOW);
+    digitalWrite(g, HIGH);
   }
 
   digitalWrite(index, LOW);
