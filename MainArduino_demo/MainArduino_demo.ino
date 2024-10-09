@@ -30,6 +30,9 @@ void setup() {
 	
   mySerial.begin(9600);
   while(!mySerial);
+
+  Serial.begin(9600);
+  while(!Serial);
   
   Wire.begin();
   
@@ -58,14 +61,20 @@ void loop() {
 
   while(1){
 
-    sv1_speed(1000);
+    sv1_speed(10);
+    sv2_speed(10);
 
     //ボタンの処理ここから
     buttonState_1 = digitalRead(button_1);
     buttonState_2 = digitalRead(button_2);
 
+    //Serial.println(buttonState_1);
+    //Serial.println(buttonState_2);
+
     if(buttonState_1 == LOW && lastButtonState_1 == HIGH){
       if(!actionDone_1) {
+
+        Serial.println("action");
 
         bh1745nuc_1.get_val(rgbc_1);
 
@@ -80,6 +89,8 @@ void loop() {
 
     if(buttonState_2 == LOW && lastButtonState_2 == HIGH){
       if(!actionDone_2) {
+
+        Serial.println("action");
 
         bh1745nuc_2.get_val(rgbc_2);
 
