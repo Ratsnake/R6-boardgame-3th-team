@@ -201,6 +201,7 @@ void send_data(int type, int data){
     case 'c':
     mySerial.print("countdown:");
     mySerial.println(data);
+    break;
   }
 
 }
