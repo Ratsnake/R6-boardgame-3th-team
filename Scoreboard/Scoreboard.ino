@@ -29,10 +29,17 @@ void setup() {
   **/
 }
 
-short rank;
+short type;
 
 void loop() {
   // put your main code here, to run repeatedly:
+
+  /**
+  type 0: point
+  type 1: level
+  type 2, countdown
+  **/
+
   while(1){
     
     if(mySerial.available()){
@@ -40,20 +47,24 @@ void loop() {
 
       if(data.startsWith("point:")){
         num_data = data.substring(6).toInt();
-        rank = 0;
-      }else if(data.startsWith("rank:")){
-        num_data = data.substring(5).toInt();
-        rank = 1;
+        type = 0;
+      }else if(data.startsWith("level:")){
+        num_data = data.substring(6).toInt();
+        type = 1;
+      }else if(data.startsWith("countdown:")){
+        num_data = data.substring(10).toInt();
+        type = 2;
       }
     }
 
-    if (rank != 1){
+    if (type == 0){
       display(num_data);
-    }else{
-      dynamic(11, 10);
+    }else if(type == 1){
+      dynamic(11, 'l');
       display(num_data);
+    }else if(type == 2){
+      dynamic(11, num_data);
     }
-
     
   }
 
@@ -177,7 +188,7 @@ void dynamic(int index, int num){
     digitalWrite(f, LOW);
     digitalWrite(g, LOW);
     break;
-    case 10:
+    case 'l':
     digitalWrite(a, HIGH);
     digitalWrite(b, HIGH);
     digitalWrite(c, HIGH);

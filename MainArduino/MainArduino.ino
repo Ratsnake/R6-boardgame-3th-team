@@ -20,6 +20,9 @@ const int button_2 = 3;
 const int sv1_pin = 6;
 const int sv2_pin = 7;
 
+int time = 0;
+int sum_time = 0;
+
 void setup() {
 
   pinMode(button_1, INPUT_PULLUP);
@@ -42,6 +45,8 @@ void setup() {
   sv1.attach(sv1_pin,700,2300);
   sv2.attach(sv2_pin,700,2300);
 
+  MsTimer2::set(1000, time_countdown);
+
   delay(500);
 
 }
@@ -53,13 +58,15 @@ int lastButtonState_2 = HIGH;
 bool actionDone_1 = false;
 bool actionDone_2 = false;
 
+int cont = 0;
+
 void loop() {
   byte rc;
   byte rc_2;
   unsigned short rgbc_1[4];
   unsigned short rgbc_2[4];
 
-  while(1){
+  while(cont == 0){
 
     sv1_speed(10);
     sv2_speed(10);
@@ -117,6 +124,40 @@ void loop() {
     lastButtonState_2 = buttonState_2;
     //ボタンの処理終わり
   }
+
+  while(cont == 1){
+
+    if (digitalRead(button_1) == HIGH){
+      MsTimer2::stop();
+
+      send_data('p', point);
+
+      delay(2000);
+
+      send_data('l', point/10/5);
+    }else{
+
+      send_data('c', 3);
+      delay(1000);
+      send_data('c', 2);
+      delay(1000);
+      send_data('c', 1);
+
+      time = 30;
+      cont = 0;
+    }
+
+  }
+}
+
+void time_countdown(){
+  time -= 1;
+
+  sum_time += 1;
+
+  if(time <= 0 || sum_time > 180){
+    cont == 1;
+  }
 }
 
 void sv1_speed(int pct){
@@ -152,10 +193,14 @@ void send_data(int type, int data){
     mySerial.println(data);
     break;
 
-    case 'r':
-    mySerial.print("rank:");
+    case 'l':
+    mySerial.print("level:");
     mySerial.println(data);
     break;
+
+    case 'c':
+    mySerial.print("countdown:");
+    mySerial.println(data);
   }
 
 }
