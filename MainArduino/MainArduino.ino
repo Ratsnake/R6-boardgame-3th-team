@@ -99,6 +99,7 @@ void loop() {
       if(!actionDone_2) {
 
         Serial.println("action");
+        Serial.println(time);
 
         bh1745nuc_2.get_val(rgbc_2);
 
