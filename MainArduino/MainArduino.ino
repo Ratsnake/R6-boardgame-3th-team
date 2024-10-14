@@ -58,7 +58,7 @@ int lastButtonState_2 = HIGH;
 bool actionDone_1 = false;
 bool actionDone_2 = false;
 
-int cont = 0;
+int cont = 1;
 
 void loop() {
   byte rc;
@@ -82,6 +82,7 @@ void loop() {
       if(!actionDone_1) {
 
         Serial.println("action");
+        Serial.println(time);
 
         bh1745nuc_1.get_val(rgbc_1);
 
@@ -134,7 +135,13 @@ void loop() {
 
       delay(2000);
 
-      send_data('l', point/10/5);
+      if(digitalRead(button_1) != HIGH){
+        break;
+      }
+
+      send_data('l', point/10);
+
+      delay(2000);
     }else{
 
       send_data('c', 3);
@@ -142,9 +149,13 @@ void loop() {
       send_data('c', 2);
       delay(1000);
       send_data('c', 1);
+      delay(1000);
 
       time = 30;
       cont = 0;
+      point = 0;
+      send_data('p', point);
+      MsTimer2::start();
     }
 
   }
@@ -156,7 +167,7 @@ void time_countdown(){
   sum_time += 1;
 
   if(time <= 0 || sum_time > 180){
-    cont == 1;
+    cont = 1;
   }
 }
 
@@ -176,12 +187,15 @@ void point_proc(int data[4]){
   if(data[0] > 5000){
 
     point += 2;
+    time += 2;
   }else if (data[1] > 5000){
 
     point += 1;
+    time += 1;
   }else if (data[2] > 5000){
 
     point += 5;
+    time += 5;
   }
 }
 
