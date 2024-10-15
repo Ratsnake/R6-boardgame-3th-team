@@ -21,7 +21,7 @@ void setup() {
     pinMode(i, OUTPUT);
   }
   
-  MsTimer2::set(100, time_count);
+  MsTimer2::set(1000, time_count);
   MsTimer2::start();
 }
 
