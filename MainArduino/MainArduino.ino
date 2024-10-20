@@ -269,9 +269,6 @@ void point_proc(int data[4]){
       time += 5;
     }
   }
-
-
-  if(map(long, long, long, long, long))
 }
 
 void send_data(int type, int data){
