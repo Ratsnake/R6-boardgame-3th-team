@@ -17,6 +17,10 @@ unsigned int point = 0;
 const int button_1 = 2;
 const int button_2 = 3;
 
+const int LED_1 = 4;
+const int LED_2 = 5;
+const int LED_3 = 6;
+
 const int sv1_pin = 6;
 const int sv2_pin = 7;
 
@@ -170,6 +174,51 @@ void time_countdown(){
   if(time <= 0 || sum_time > 180){
     cont = 1;
   }
+
+  //LED制御
+  
+  if(time > 120){
+    if(time > 150){
+      digitalWrite(LED_3, HIGH);
+    }else{
+      if(time %2 == 0){
+        digitalWrite(LED_3, HIGh);
+      }else{
+        digitalWrite(LED_3, LOW);
+      }
+    }
+  }else{
+    digitalWrite(LED_3, LOW);
+  }
+
+  if(time > 60){
+    if(time > 90){
+      digitalWrite(LED_2, HIGH);
+    }else{
+      if(time %2 == 0){
+        digitalWrite(LED_2, HIGh);
+      }else{
+        digitalWrite(LED_2, LOW);
+      }
+    }
+  }else{
+    digitalWrite(LED_2, LOW);
+  }
+
+  if(time > 0){
+    if(time > 30){
+      digitalWrite(LED_1, HIGH);
+    }else{
+      if(time %2 == 0){
+        digitalWrite(LED_1, HIGh);
+      }else{
+        digitalWrite(LED_1, LOW);
+      }
+    }
+  }else{
+    digitalWrite(LED_1, LOW);
+  }
+
 }
 
 void sv1_speed(int pct){
@@ -185,19 +234,44 @@ void sv2_speed(int pct){
 void point_proc(int data[4]){
   //r:0, g:1, b:2, c:3
 
-  if(data[0] > 5000){
-
-    point += 2;
-    time += 2;
-  }else if (data[1] > 5000){
-
-    point += 1;
-    time += 1;
-  }else if (data[2] > 5000){
-
-    point += 5;
-    time += 5;
+  float r_norm = (float)data[0] / data[3];
+  float g_norm = (float)data[1] / data[3];
+  float b_norm = (float)data[2] / data[3];
+  
+  // 最大値を見つける
+  float max_val = max(max(r_norm, g_norm), b_norm);
+  
+  // 2番目に大きい値を見つける
+  float second_max = 0;
+  if (max_val == r_norm) {
+    second_max = max(g_norm, b_norm);
+  } else if (max_val == g_norm) {
+    second_max = max(r_norm, b_norm);
+  } else {
+    second_max = max(r_norm, g_norm);
   }
+  
+  // 最大値と2番目の値の差を計算
+  float difference = max_val - second_max;
+  
+  // 閾値（この値は調整可能）
+  float threshold = 0.2;
+  
+  if (difference > threshold) {
+    if (max_val == r_norm) {
+      point += 2;
+      time += 2;
+    } else if (max_val == g_norm) {
+      point += 1;
+      time += 1;
+    } else if (max_val == b_norm) {
+      point += 5;
+      time += 5;
+    }
+  }
+
+
+  if(map(long, long, long, long, long))
 }
 
 void send_data(int type, int data){
