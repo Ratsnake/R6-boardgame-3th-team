@@ -21,8 +21,8 @@ const int LED_1 = 4;
 const int LED_2 = 5;
 const int LED_3 = 6;
 
-const int sv1_pin = 6;
-const int sv2_pin = 7;
+const int sv1_pin = 10;
+const int sv2_pin = 11;
 
 int time = 0;
 int sum_time = 0;
@@ -149,12 +149,18 @@ void loop() {
       delay(2000);
     }else{
 
+      digitalWrite(LED_1, HIGH);
+      digitalWrite(LED_2, HIGH);
+      digitalWrite(LED_3, HIGH);
       send_data('c', 3);
       delay(1000);
+      digitalWrite(LED_3, LOW);
       send_data('c', 2);
       delay(1000);
+      digitalWrite(LED_2, LOW);
       send_data('c', 1);
       delay(1000);
+      digitalWrite(LED_1, LOW);
 
       time = 30;
       cont = 0;
@@ -176,49 +182,96 @@ void time_countdown(){
   }
 
   //LED制御
+
+  unsigned short rem_sum_time = 180 - sum_time;
+
+  if(time > 180){
+
+    if(rem_sum_time > 120){
+      if(rem_sum_time > 150){
+        digitalWrite(LED_3, HIGH);
+      }else{
+        if(rem_sum_time %2 == 0){
+          digitalWrite(LED_3, HIGH);
+        }else{
+          digitalWrite(LED_3, LOW);
+        }
+      }
+    }else{
+      digitalWrite(LED_3, LOW);
+    }
+
+    if(rem_sum_time > 60){
+      if(rem_sum_time > 90){
+       digitalWrite(LED_2, HIGH);
+      }else{
+        if(rem_sum_time %2 == 0){
+          digitalWrite(LED_2, HIGH);
+        }else{
+          digitalWrite(LED_2, LOW);
+        }
+      }
+    }else{
+      digitalWrite(LED_2, LOW);
+    }
+
+    if(rem_sum_time > 0){
+      if(rem_sum_time > 30){
+        digitalWrite(LED_1, HIGH);
+      }else{
+        if(rem_sum_time %2 == 0){
+          digitalWrite(LED_1, HIGH);
+        }else{
+          digitalWrite(LED_1, LOW);
+        }
+      }
+   }else{
+     digitalWrite(LED_1, LOW);
+   }
+  }else{
   
-  if(time > 120){
-    if(time > 150){
-      digitalWrite(LED_3, HIGH);
-    }else{
-      if(time %2 == 0){
-        digitalWrite(LED_3, HIGh);
+    if(time > 120){
+      if(time > 150){
+        digitalWrite(LED_3, HIGH);
       }else{
-        digitalWrite(LED_3, LOW);
+       if(time %2 == 0){
+         digitalWrite(LED_3, HIGH);
+        }else{
+          digitalWrite(LED_3, LOW);
+        }
       }
-    }
-  }else{
-    digitalWrite(LED_3, LOW);
-  }
-
-  if(time > 60){
-    if(time > 90){
-      digitalWrite(LED_2, HIGH);
     }else{
-      if(time %2 == 0){
-        digitalWrite(LED_2, HIGh);
-      }else{
-        digitalWrite(LED_2, LOW);
-      }
+      digitalWrite(LED_3, LOW);
     }
-  }else{
-    digitalWrite(LED_2, LOW);
-  }
 
-  if(time > 0){
-    if(time > 30){
-      digitalWrite(LED_1, HIGH);
+    if(time > 60){
+      if(time > 90){
+        digitalWrite(LED_2, HIGH);
+      }else{
+        if(time %2 == 0){
+          digitalWrite(LED_2, HIGH);
+        }else{
+          digitalWrite(LED_2, LOW);
+        }
+      }
     }else{
-      if(time %2 == 0){
-        digitalWrite(LED_1, HIGh);
-      }else{
-        digitalWrite(LED_1, LOW);
-      }
+      digitalWrite(LED_2, LOW);
     }
-  }else{
-    digitalWrite(LED_1, LOW);
-  }
 
+    if(time > 0){
+      if(time > 30){
+        digitalWrite(LED_1, HIGH);
+      }else{
+        if(time %2 == 0){
+          digitalWrite(LED_1, HIGH);
+        }else{
+          digitalWrite(LED_1, LOW);
+        }
+      }
+    }else{
+      digitalWrite(LED_1, LOW);
+    }
+  }
 }
 
 void sv1_speed(int pct){
