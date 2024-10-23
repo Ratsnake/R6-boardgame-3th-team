@@ -72,9 +72,6 @@ void loop() {
 
   while(cont == 0){
 
-    sv1_speed(10);
-    sv2_speed(10);
-
     //ボタンの処理ここから
     buttonState_1 = digitalRead(button_1);
     buttonState_2 = digitalRead(button_2);
@@ -135,6 +132,9 @@ void loop() {
 
     if (digitalRead(button_1) == HIGH){
       MsTimer2::stop();
+      sv1_speed(0);
+      sv2_speed(0);
+      
 
       send_data('p', point);
 
@@ -167,6 +167,8 @@ void loop() {
       point = 0;
       send_data('p', point);
       MsTimer2::start();
+      sv1_speed(10);
+      sv2_speed(10);
     }
 
   }
