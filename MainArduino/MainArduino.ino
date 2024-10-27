@@ -95,6 +95,7 @@ void loop() {
         send_data('p', point);
 
         actionDone_1 = true;
+        delay(500);
       }
 
     }
@@ -287,39 +288,41 @@ void sv2_speed(int pct){
 void point_proc(int data[4]){
   //r:0, g:1, b:2, c:3
 
-  float r_norm = (float)data[0] / data[3];
-  float g_norm = (float)data[1] / data[3];
-  float b_norm = (float)data[2] / data[3];
-  
-  // 最大値を見つける
-  float max_val = max(max(r_norm, g_norm), b_norm);
-  
-  // 2番目に大きい値を見つける
-  float second_max = 0;
-  if (max_val == r_norm) {
-    second_max = max(g_norm, b_norm);
-  } else if (max_val == g_norm) {
-    second_max = max(r_norm, b_norm);
-  } else {
-    second_max = max(r_norm, g_norm);
-  }
-  
-  // 最大値と2番目の値の差を計算
-  float difference = max_val - second_max;
-  
-  // 閾値（この値は調整可能）
-  float threshold = 0.2;
-  
-  if (difference > threshold) {
-    if (max_val == r_norm) {
-      point += 2;
-      time += 2;
-    } else if (max_val == g_norm) {
-      point += 1;
-      time += 1;
-    } else if (max_val == b_norm) {
+  Serial.println();
+  Serial.print("R:");
+  Serial.println(data[0]);
+  Serial.print("G:");
+  Serial.println(data[1]);
+  Serial.print("B:");
+  Serial.println(data[2]);
+  Serial.print("C:");
+  Serial.println(data[3]);
+  Serial.println();
+
+  float c_data[3];
+
+  c_data[0] = (float)data[3]*10 / data[0];
+  c_data[1] = (float)data[3]*10 / data[1];
+  c_data[2] = (float)data[3]*10 / (data[2]*1.5);
+
+  Serial.print("R:");
+  Serial.println(c_data[0]);
+  Serial.print("G:");
+  Serial.println(c_data[1]);
+  Serial.print("B:");
+  Serial.println(c_data[2]);
+  Serial.println();
+
+  if(20 < data[3] && data[3] < 500){
+    if(c_data[2] < 1.0){
       point += 5;
       time += 5;
+    }else if(c_data[0] < 1.0){
+      point += 2;
+      time += 2;
+    }else if(c_data[1] < 1.0){
+      point += 1;
+      time += 1;
     }
   }
 }
