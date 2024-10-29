@@ -7,7 +7,6 @@
 SoftwareSerial mySerial(12, 13);//rx.tx
 
 BH1745NUC bh1745nuc_1(BH1745NUC_DEVICE_ADDRESS_38);
-BH1745NUC bh1745nuc_2(BH1745NUC_DEVICE_ADDRESS_39);
 
 Servo sv1;
 Servo sv2;
@@ -15,7 +14,6 @@ Servo sv2;
 unsigned int point = 0;
 
 const int button_1 = 2;
-const int button_2 = 3;
 
 const int LED_1 = 4;
 const int LED_2 = 5;
@@ -30,7 +28,6 @@ int sum_time = 0;
 void setup() {
 
   pinMode(button_1, INPUT_PULLUP);
-  pinMode(button_2, INPUT_PULLUP);
 
   byte rc;
   byte rc_2;
@@ -44,7 +41,6 @@ void setup() {
   Wire.begin();
   
   rc = bh1745nuc_1.init();
-  rc_2 = bh1745nuc_2.init();
 
   sv1.attach(sv1_pin,700,2300);
   sv2.attach(sv2_pin,700,2300);
@@ -57,10 +53,7 @@ void setup() {
 
 int buttonState_1 = HIGH;
 int lastButtonState_1 = HIGH;
-int buttonState_2 = HIGH;
-int lastButtonState_2 = HIGH;
 bool actionDone_1 = false;
-bool actionDone_2 = false;
 
 int cont = 1;
 
@@ -68,16 +61,13 @@ void loop() {
   byte rc;
   byte rc_2;
   unsigned short rgbc_1[4];
-  unsigned short rgbc_2[4];
 
   while(cont == 0){
 
     //ボタンの処理ここから
     buttonState_1 = digitalRead(button_1);
-    buttonState_2 = digitalRead(button_2);
 
     //Serial.println(buttonState_1);
-    //Serial.println(buttonState_2);
 
     if(buttonState_1 == LOW && lastButtonState_1 == HIGH){
       if(!actionDone_1) {
@@ -97,35 +87,12 @@ void loop() {
 
     }
 
-    if(buttonState_2 == LOW && lastButtonState_2 == HIGH){
-      if(!actionDone_2) {
-
-        Serial.println("action");
-        Serial.println(time);
-
-        bh1745nuc_2.get_val(rgbc_2);
-
-        point_proc(rgbc_2);
-
-        send_data('p', point);
-
-        actionDone_2 = true;
-      }
-
-    }
-
     if (buttonState_1 == HIGH && lastButtonState_1 == LOW) {
 
       actionDone_1 = false;
     }
 
-    if (buttonState_2 == HIGH && lastButtonState_2 == LOW) {
-
-      actionDone_2 = false;
-    }
-
     lastButtonState_1 = buttonState_1;
-    lastButtonState_2 = buttonState_2;
     //ボタンの処理終わり
   }
 
@@ -149,6 +116,7 @@ void loop() {
 
       delay(2000);
     }else{
+      bh1745nuc_1.init();
 
       digitalWrite(LED_1, HIGH);
       digitalWrite(LED_2, HIGH);
@@ -320,8 +288,8 @@ void point_proc(int data[4]){
       point += 5;
       time += 5;
     }else if(c_data[0] < 1.0){
-      point += 2;
-      time += 2;
+      point += 3;
+      time += 3;
     }else if(c_data[1] < 1.0){
       point += 1;
       time += 1;
