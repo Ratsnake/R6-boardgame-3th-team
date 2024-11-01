@@ -47,7 +47,9 @@ void setup() {
 
   MsTimer2::set(1000, time_countdown);
 
-  delay(500);
+  send_data('p', 888);
+
+  delay(1000);
 
 }
 
@@ -105,6 +107,8 @@ void loop() {
       
 
       send_data('p', point);
+      digitalWrite(LED_1, HIGH);
+      digitalWrite(LED_3, LOW);
 
       delay(2000);
 
@@ -113,8 +117,14 @@ void loop() {
       }
 
       send_data('l', point/10);
+      digitalWrite(LED_1, LOW);
+      digitalWrite(LED_3, HIGH);
+
+      sv1.write(90);
+      sv2.write(90);
 
       delay(2000);
+
     }else{
       bh1745nuc_1.init();
 
@@ -136,8 +146,8 @@ void loop() {
       point = 0;
       send_data('p', point);
       MsTimer2::start();
-      sv1_speed(10);
-      sv2_speed(10);
+      sv1_speed(12);
+      sv2_speed(12);
     }
 
   }
@@ -284,15 +294,15 @@ void point_proc(int data[4]){
   Serial.println();
 
   if(20 < data[3] && data[3] < 500){
-    if(c_data[2] < 1.0){
+    if(c_data[2] < 1.2){
       point += 5;
-      time += 5;
-    }else if(c_data[0] < 1.0){
+      time += 1;
+    }else if(c_data[0] < 1.2){
       point += 3;
-      time += 3;
+      time += 0;
     }else if(c_data[1] < 1.0){
       point += 1;
-      time += 1;
+      time += 0;
     }
   }
 }
