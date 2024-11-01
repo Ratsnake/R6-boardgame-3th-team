@@ -3,6 +3,7 @@
 #include <SoftwareSerial.h>
 #include <MsTimer2.h>
 #include <Servo.h>
+#include <math.h>
 
 SoftwareSerial mySerial(12, 13);//rx.tx
 
@@ -58,6 +59,7 @@ int lastButtonState_1 = HIGH;
 bool actionDone_1 = false;
 
 int cont = 1;
+int t_cont = 1;
 
 void loop() {
   byte rc;
@@ -104,6 +106,12 @@ void loop() {
       MsTimer2::stop();
       sv1_speed(0);
       sv2_speed(0);
+
+      if(t_cont == 1){
+        delay(2000);
+
+        t_cont = 0;
+      }
       
 
       send_data('p', point);
@@ -116,7 +124,7 @@ void loop() {
         break;
       }
 
-      send_data('l', point/10);
+      send_data('l', point/15);
       digitalWrite(LED_1, LOW);
       digitalWrite(LED_3, HIGH);
 
@@ -143,11 +151,12 @@ void loop() {
 
       time = 30;
       cont = 0;
+      t_cont = 0;
       point = 0;
       send_data('p', point);
       MsTimer2::start();
-      sv1_speed(12);
-      sv2_speed(12);
+      sv1_speed(14);
+      sv2_speed(14);
     }
 
   }
@@ -160,6 +169,7 @@ void time_countdown(){
 
   if(time <= 0 || sum_time > 180){
     cont = 1;
+    t_cont = 1;
   }
 
   //LED制御
@@ -300,7 +310,7 @@ void point_proc(int data[4]){
     }else if(c_data[0] < 1.2){
       point += 3;
       time += 0;
-    }else if(c_data[1] < 1.0){
+    }else if(c_data[1] < 1.1){
       point += 1;
       time += 0;
     }
