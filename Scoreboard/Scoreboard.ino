@@ -54,6 +54,9 @@ void loop() {
       }else if(data.startsWith("countdown:")){
         num_data = data.substring(10).toInt();
         type = 2;
+      }else if (data.startsWith("black:")) {
+        type = 3;
+
       }
     }
 
@@ -64,6 +67,8 @@ void loop() {
       display(num_data);
     }else if(type == 2){
       dynamic(11, num_data);
+    }else if(type == 3){
+      
     }
     
   }
@@ -196,6 +201,16 @@ void dynamic(int index, int num){
     digitalWrite(e, LOW);
     digitalWrite(f, LOW);
     digitalWrite(g, HIGH);
+    break;
+    case 'b':
+    digitalWrite(a, HIGH);
+    digitalWrite(b, HIGH);
+    digitalWrite(c, HIGH);
+    digitalWrite(d, HIGH);
+    digitalWrite(e, HIGH);
+    digitalWrite(f, HIGH);
+    digitalWrite(g, HIGH);
+    break;
   }
 
   digitalWrite(index, LOW);
