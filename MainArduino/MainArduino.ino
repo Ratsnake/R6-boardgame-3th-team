@@ -50,6 +50,9 @@ void setup() {
 
   send_data('p', 888);
 
+  sv1_speed(0);
+  sv2_speed(0);
+
   delay(1000);
 
 }
@@ -59,7 +62,7 @@ int lastButtonState_1 = HIGH;
 bool actionDone_1 = false;
 
 int cont = 1;
-int t_cont = 1;
+int t_cont = 0;
 
 void loop() {
   byte rc;
@@ -102,17 +105,20 @@ void loop() {
 
   while(cont == 1){
 
-    if (digitalRead(button_1) == HIGH){
-      MsTimer2::stop();
+    if(t_cont == 1){
       sv1_speed(0);
       sv2_speed(0);
 
-      if(t_cont == 1){
-        delay(2000);
-
-        t_cont = 0;
-      }
+      send_data('p', point);
+      delay(4000);
       
+      t_cont = 0;
+    }
+
+    if (digitalRead(button_1) == HIGH && t_cont == 0){
+      MsTimer2::stop();
+      sv1_speed(0);
+      sv2_speed(0);
 
       send_data('p', point);
       digitalWrite(LED_1, HIGH);
@@ -120,7 +126,7 @@ void loop() {
 
       delay(2000);
 
-      if(digitalRead(button_1) != HIGH){
+      if(digitalRead(button_1) != HIGH && t_cont == 0){
         break;
       }
 
@@ -151,12 +157,11 @@ void loop() {
 
       time = 30;
       cont = 0;
-      t_cont = 0;
       point = 0;
       send_data('p', point);
       MsTimer2::start();
-      sv1_speed(14);
-      sv2_speed(14);
+      sv1_speed(16);
+      sv2_speed(15);
     }
 
   }
@@ -180,87 +185,87 @@ void time_countdown(){
 
     if(rem_sum_time > 120){
       if(rem_sum_time > 150){
-        digitalWrite(LED_3, HIGH);
+        digitalWrite(LED_3, LOW);
       }else{
         if(rem_sum_time %2 == 0){
-          digitalWrite(LED_3, HIGH);
-        }else{
           digitalWrite(LED_3, LOW);
+        }else{
+          digitalWrite(LED_3, HIGH);
         }
       }
     }else{
-      digitalWrite(LED_3, LOW);
+      digitalWrite(LED_3, HIGH);
     }
 
     if(rem_sum_time > 60){
       if(rem_sum_time > 90){
-       digitalWrite(LED_2, HIGH);
+       digitalWrite(LED_2, LOW);
       }else{
         if(rem_sum_time %2 == 0){
-          digitalWrite(LED_2, HIGH);
-        }else{
           digitalWrite(LED_2, LOW);
+        }else{
+          digitalWrite(LED_2, HIGH);
         }
       }
     }else{
-      digitalWrite(LED_2, LOW);
+      digitalWrite(LED_2, HIGH);
     }
 
     if(rem_sum_time > 0){
       if(rem_sum_time > 30){
-        digitalWrite(LED_1, HIGH);
+        digitalWrite(LED_1, LOW);
       }else{
         if(rem_sum_time %2 == 0){
-          digitalWrite(LED_1, HIGH);
-        }else{
           digitalWrite(LED_1, LOW);
+        }else{
+          digitalWrite(LED_1, HIGH);
         }
       }
    }else{
-     digitalWrite(LED_1, LOW);
+     digitalWrite(LED_1, HIGH);
    }
   }else{
   
     if(time > 120){
       if(time > 150){
-        digitalWrite(LED_3, HIGH);
+        digitalWrite(LED_3, LOW);
       }else{
        if(time %2 == 0){
-         digitalWrite(LED_3, HIGH);
+         digitalWrite(LED_3, LOW);
         }else{
-          digitalWrite(LED_3, LOW);
+          digitalWrite(LED_3, HIGH);
         }
       }
     }else{
-      digitalWrite(LED_3, LOW);
+      digitalWrite(LED_3, HIGH);
     }
 
     if(time > 60){
       if(time > 90){
-        digitalWrite(LED_2, HIGH);
+        digitalWrite(LED_2, LOW);
       }else{
         if(time %2 == 0){
-          digitalWrite(LED_2, HIGH);
-        }else{
           digitalWrite(LED_2, LOW);
+        }else{
+          digitalWrite(LED_2, HIGH);
         }
       }
     }else{
-      digitalWrite(LED_2, LOW);
+      digitalWrite(LED_2, HIGH);
     }
 
     if(time > 0){
       if(time > 30){
-        digitalWrite(LED_1, HIGH);
+        digitalWrite(LED_1, LOW);
       }else{
         if(time %2 == 0){
-          digitalWrite(LED_1, HIGH);
-        }else{
           digitalWrite(LED_1, LOW);
+        }else{
+          digitalWrite(LED_1, HIGH);
         }
       }
     }else{
-      digitalWrite(LED_1, LOW);
+      digitalWrite(LED_1, HIGH);
     }
   }
 }
@@ -304,13 +309,13 @@ void point_proc(int data[4]){
   Serial.println();
 
   if(20 < data[3] && data[3] < 500){
-    if(c_data[2] < 1.2){
+    if(c_data[2] < 1.3){
       point += 5;
       time += 1;
     }else if(c_data[0] < 1.2){
       point += 3;
       time += 0;
-    }else if(c_data[1] < 1.1){
+    }else if(c_data[1] < 1.0){
       point += 1;
       time += 0;
     }
@@ -333,6 +338,10 @@ void send_data(int type, int data){
     case 'c':
     mySerial.print("countdown:");
     mySerial.println(data);
+    break;
+
+    case 'b':
+    mySerial.print("black:");
     break;
   }
 
